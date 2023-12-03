@@ -1,0 +1,13 @@
+:root {
+    --background-color: #151c2c;
+    --color-g-1: #1d263b;
+    --color-g-2: #545d6e;
+
+    --color: white;
+
+    --fz-small: 12px;
+    --fz-normal: 16px;
+    --fz-big: 24px;
+}
+
+:root[data-theme="white"] {}

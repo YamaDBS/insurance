@@ -1,0 +1,346 @@
+.insurance_tabs {
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 20px;
+    max-width: min(80vw, 1200px);
+    margin: 0 auto;
+    background-color: var(--color-g-2);
+
+    min-height: min(80dvh, 700px);
+    height: fit-content;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-top: 30px;
+
+    .insurance_tab {
+        user-select: none;
+        width: 33.34%;
+        border-right: 1px solid black;
+
+        padding: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        font-size: 1.2rem;
+
+        text-align: center;
+        cursor: pointer;
+
+        transition: all 0.2s ease-in-out;
+
+        &.active {
+            color: white;
+            background-color: var(--color-g-1);
+            filter: none;
+        }
+
+        &:last-child {
+            border-right: none;
+        }
+
+        img {
+            filter: brightness(0) invert(1);
+            height: 30px;
+        }
+    }
+}
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.insurance_content {
+    background-color: var(--color-g-1);
+    padding: 30px;
+    height: fit-content;
+    min-height: 70dvh;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.side_info {
+    width: 40%;
+    height: 70dvh;
+
+    overflow: hidden;
+    position: relative;
+
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+
+    .title {
+        background-color: var(--color-g-2);
+
+        padding: 10px 20px;
+        border-radius: 20px;
+
+        margin-top: 20px;
+
+        display: block;
+    }
+
+    img {
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+    }
+
+    .info {
+        z-index: 3;
+        height: auto;
+        max-width: 80%;
+        padding: 20px;
+        gap: 20px;
+
+        background-color: var(--color-g-2);
+        box-shadow: 3px 3px 15px rgba(0, 0, 0, 1);
+
+        border-radius: 15px;
+        margin-bottom: 20px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            z-index: inherit;
+        }
+
+        p {
+            z-index: inherit;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+    }
+}
+
+.row {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+
+    gap: 30px;
+
+    label {
+        width: calc(45% - 15px);
+    }
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    width: calc(45% - 15px);
+    gap: 30px;
+
+    label {
+        width: 100%;
+    }
+}
+
+
+
+.form {
+    width: 70%;
+    min-height: 70dvh;
+    height: fit-content;
+
+    margin: 0 auto;
+    display: flex;
+    position: relative;
+
+    flex-direction: column;
+    justify-content: space-between;
+
+    gap: 20px;
+    max-width: 600px;
+}
+
+.title {
+    z-index: 3;
+
+    font-size: 3rem;
+    font-weight: 600;
+
+    margin: 0 auto;
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+select,
+option {
+    text-transform: capitalize;
+}
+
+label {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+
+    h4 {
+        position: relative;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        width: fit-content;
+    }
+
+    select,
+    input {
+        position: relative;
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        font-weight: normal;
+        border-radius: 5px;
+
+        border: 2px solid var(--color-g-2);
+        color: white;
+        text-transform: capitalize;
+
+        background-color: var(--background-color);
+
+        &:focus {
+            border-color: #4a72cf;
+        }
+    }
+
+    select[required]+h4,
+    input[required]+h4 {
+        &::after {
+            content: "*";
+            color: red;
+            position: absolute;
+            right: -15px;
+            top: 0px;
+            z-index: 5;
+        }
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: brightness(0) invert(1);
+    }
+
+    option {
+        padding: 10px;
+    }
+
+    .unit {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: gray;
+
+        position: absolute;
+        right: 10px;
+        bottom: 0px;
+
+        z-index: 5;
+
+        transform: translateY(-50%);
+    }
+}
+
+.form_btn {
+    width: fit-content;
+    padding: 15px 30px;
+    margin-top: auto;
+    border-radius: 10px;
+    color: var(--color);
+
+    background-color: var(--color-g-2);
+
+    font-size: 1.2rem;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: #4a72cf
+    }
+}
+
+.submit_bth {
+    padding: 20px 50px;
+
+    margin-top: auto;
+    margin-left: auto;
+
+    &:hover {
+        background-color: #09c447
+    }
+}
+
+
+.items {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+
+    max-width: 80%;
+
+    .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: fit-content;
+        gap: 20px;
+
+        font-size: 1.2rem;
+
+        p {
+            width: fit-content;
+        }
+
+        span {
+            font-weight: 900;
+        }
+
+        &::before {
+            content: url('../../../public/img/ico/check.svg');
+            display: block;
+
+            width: 20px;
+            aspect-ratio: 1;
+        }
+    }
+
+    &+.form_btn {
+        margin-top: 0;
+    }
+}
+
+.info_title {
+    font-size: 3rem;
+    font-weight: 900;
+}

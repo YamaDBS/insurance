@@ -1,0 +1,158 @@
+.card {
+    position: relative;
+    border: 3px solid #e0e0e0;
+    border-radius: 10px;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        border-color: #4a72cf;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+
+    .title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    img {
+        height: 30px;
+        filter: brightness(0) invert(1);
+    }
+
+    .date {
+        margin-left: auto;
+        border: none;
+        background-color: transparent;
+        padding: 0;
+    }
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    background-color: #4a72cf;
+
+    &.active {
+        background-color: #2ecc3b;
+    }
+
+    &.new {
+        background-color: #3498db;
+    }
+
+    &.cancelled {
+        background-color: #e74c3c;
+    }
+
+    &.expired {
+        background-color: #95a5a6;
+    }
+
+    &.pending {
+        background-color: #f39c12;
+    }
+
+    &.paid {
+        background-color: #008d00;
+    }
+}
+
+.id {
+    font-size: 14px;
+    font-weight: 600;
+    color: #95a5a6;
+    text-wrap: nowrap;
+
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: baseline;
+    width: 100%;
+}
+
+.description {
+    font-size: 16px;
+    font-weight: normal;
+    color: white;
+}
+
+.date_wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5px;
+
+    margin-top: 30px;
+}
+
+.date {
+    border: 1px solid #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 30px;
+    text-wrap: nowrap;
+}
+
+.arrow {
+    filter: brightness(0) invert(1);
+    width: 22px;
+    transform: rotate(-90deg);
+}
+
+.coverage {
+    font-size: 25px;
+    font-weight: 900;
+    color: white;
+    width: fit-content;
+
+    span {
+        font-size: 20px;
+        font-weight: 600;
+        color: rgb(6, 206, 6);
+    }
+}
+
+.price {
+    font-size: 18px;
+    margin-left: auto;
+
+    span {
+        font-size: 15px;
+        font-weight: 600;
+        color: #b8b8b8;
+    }
+
+    p {
+        display: inline;
+        font-size: 20px;
+        font-weight: normal;
+        color: white;
+        width: fit-content;
+    }
+}
