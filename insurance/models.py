@@ -1,6 +1,7 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-import datetime
+from django.utils import timezone
+
+from user.models import User
 
 
 class InsuranceType(models.Model):
@@ -18,6 +19,8 @@ class InsuranceStatus(models.Model):
 
 
 class Insurance(models.Model):
+    number = models.CharField(max_length=9, unique=True)
+
     name = models.CharField(max_length=63, unique=True)
     description = models.TextField()
 
@@ -35,7 +38,7 @@ class Insurance(models.Model):
         on_delete=models.CASCADE
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now(), editable=False)
 
     start_date = models.DateField()
     end_date = models.DateField()
@@ -45,13 +48,17 @@ class Insurance(models.Model):
         return (self.end_date - self.start_date).days
 
 
-class Agent(AbstractUser):
+class Agent(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
     class Meta:
         verbose_name = "agent"
         verbose_name_plural = "agents"
 
 
-class Client(AbstractUser):
+class Client(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
     phone_number = models.CharField(max_length=31)
     passport_number = models.CharField(max_length=31)
     address = models.CharField(max_length=255)
@@ -77,6 +84,5 @@ class Client(AbstractUser):
 
     agent = models.ForeignKey(
         Agent,
-        related_name="client",
         on_delete=models.CASCADE
     )

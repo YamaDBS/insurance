@@ -1,0 +1,114 @@
+[
+  {
+    "model": "insurance.insurancetype",
+    "pk": 1,
+    "fields": {
+      "name": "Travel"
+    }
+  },
+  {
+    "model": "insurance.insurancetype",
+    "pk": 2,
+    "fields": {
+      "name": "Pet"
+    }
+  },
+  {
+    "model": "insurance.insurancetype",
+    "pk": 3,
+    "fields": {
+      "name": "Life"
+    }
+  },
+
+
+  {
+    "model": "insurance.insurancestatus",
+    "pk": 1,
+    "fields": {
+      "name": "New"
+    }
+  },
+  {
+    "model": "insurance.insurancestatus",
+    "pk": 2,
+    "fields": {
+      "name": "Active"
+    }
+  },
+  {
+    "model": "insurance.insurancestatus",
+    "pk": 3,
+    "fields": {
+      "name": "Cancelled"
+    }
+  },
+  {
+    "model": "insurance.insurancestatus",
+    "pk": 4,
+    "fields": {
+      "name": "Expired"
+    }
+  },
+  {
+    "model": "insurance.insurancestatus",
+    "pk": 5,
+    "fields": {
+      "name": "Paid"
+    }
+  },
+  {
+    "model": "insurance.insurancestatus",
+    "pk": 6,
+    "fields": {
+      "name": "Pending"
+    }
+  },
+
+
+  {
+    "model": "insurance.insurance",
+    "pk": 1,
+    "fields": {
+      "number": "AB12345CD",
+      "name": "My Life Insurance",
+      "description": "Insurance description 1",
+      "price": 500.00,
+      "coverage": 10000.00,
+      "type": 3,
+      "status": 1,
+      "start_date": "2020-08-12",
+      "end_date": "2023-01-17"
+    }
+  },
+  {
+    "model": "insurance.insurance",
+    "pk": 2,
+    "fields": {
+      "number": "ZK36593GE",
+      "name": "My Pet Insurance",
+      "description": "Insurance description 2",
+      "price": 400.00,
+      "coverage": 1000.00,
+      "type": 2,
+      "status": 2,
+      "start_date": "2020-07-12",
+      "end_date": "2023-07-17"
+    }
+  },
+  {
+    "model": "insurance.insurance",
+    "pk": 3,
+    "fields": {
+      "number": "KI86368DQ",
+      "name": "My Travel Insurance",
+      "description": "Insurance description 3",
+      "price": 300.00,
+      "coverage": 100.00,
+      "type": 1,
+      "status": 4,
+      "start_date": "2021-02-12",
+      "end_date": "2023-02-17"
+    }
+  }
+]
