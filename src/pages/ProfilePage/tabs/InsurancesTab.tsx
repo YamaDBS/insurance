@@ -1,11 +1,13 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { InsurancesContext, UserContext, UserInsurancesContext } from '../../../App'
+import { API } from '../../../api/API'
 import InsuranceCard from '../../../components/InsuranceCard/InsuranceCard'
+import { useDebounce } from '../../../hooks/useDebounce'
 import styles from '../../Page.module.scss'
 
 
 export default function InsurancesTab() {
-    const { userInsurances } = useContext(UserInsurancesContext)
+    const { userInsurances, setUserInsurances } = useContext(UserInsurancesContext)
     const { user } = useContext(UserContext)
 
     const { insurances } = useContext(InsurancesContext)
@@ -13,14 +15,40 @@ export default function InsurancesTab() {
     const [selectedInsurances, setSelectedINsurances] = useState<'my' | 'all' | 'new'>('my')
 
     const [query, setQuery] = useState('')
+    const debouncedQuery = useDebounce(query, 1000)
+
+    async function search(query: string) {
+        if (query !== '') {
+            const resp = await API.searchInsurances(query)
+            setUserInsurances(resp)
+        }
+        else {
+            const resp = await API.getUserInsurances()
+            setUserInsurances(resp)
+        }
+    }
+
+    useEffect(() => {
+        search(debouncedQuery)
+    }, [debouncedQuery])
 
     if (user?.status === 'user') {
         return (
-            <div className={styles.insurances}>
-                {userInsurances.map((insurance, index) => (
-                    <InsuranceCard insurance={insurance} key={insurance.id + insurance.price * index} />
-                ))}
-            </div>
+            <>
+                <div className={styles.header}>
+                    <div className={styles.search}>
+                        <input type="text" placeholder="Search..." value={query} onChange={e => setQuery(e.currentTarget.value)} />
+                        <button type='button' onClick={() => search(query)}>
+                            <img src="/img/ico/search.svg" alt="search" />
+                        </button>
+                    </div>
+                </div>
+                <div className={styles.insurances}>
+                    {userInsurances.map((insurance, index) => (
+                        <InsuranceCard insurance={insurance} key={insurance.id + insurance.price * index} />
+                    ))}
+                </div>
+            </>
         )
     }
 
@@ -28,13 +56,6 @@ export default function InsurancesTab() {
         return (
             <>
                 <div className={styles.header}>
-
-                    <div className={styles.type_selector}>
-                        <div className={[styles.item, selectedInsurances === 'my' && styles.active].join(' ')} onClick={() => setSelectedINsurances('my')}>My</div>
-                        <div className={[styles.item, selectedInsurances === 'new' && styles.active].join(' ')} onClick={() => setSelectedINsurances('new')}>New</div>
-                        <div className={[styles.item, selectedInsurances === 'all' && styles.active].join(' ')} onClick={() => setSelectedINsurances('all')}>All</div>
-                    </div>
-
                     <div className={styles.search}>
                         <input type="text" placeholder="Search..." value={query} onChange={e => setQuery(e.currentTarget.value)} />
                         <button type='button'>

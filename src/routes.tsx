@@ -1,5 +1,5 @@
 import HomePage from "./pages/HomePage"
-import LoginPage from "./pages/LoginPage"
+import LoginPage from "./pages/LoginPage/LoginPage"
 import ProfilePage from "./pages/ProfilePage/ProfilePage"
 
 const public_routes = [

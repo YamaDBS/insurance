@@ -11,7 +11,7 @@ export default function ProfileButton() {
             {user ?
                 <Link to={'/profile'} className={styles.profile} >
                     <img src="./img/ico/user.png" alt="user" />
-                    {user.first_name}
+                    {user.username}
                     <p>({user.status})</p>
                     {/* TODO: delete status */}
                 </Link >

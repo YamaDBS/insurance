@@ -56,6 +56,11 @@ export default function UsersTab() {
                         .map((u, index) => (
                             <div className={styles.user} key={u.id + u.last_name + index}>
                                 <div className={styles.id}>{u.id}</div>
+                                <div className={styles.name}>{u.first_name} {u.last_name}</div>
+                                <div className={styles.gender}>{u.gender}</div>
+                                <div className={styles.email}>{u.email}</div>
+                                <div className={styles.phone_number}>{u.phone_number}</div>
+                                <div className={styles.passport_number}>{u.passport_number}</div>
                             </div>
                         ))
                     }

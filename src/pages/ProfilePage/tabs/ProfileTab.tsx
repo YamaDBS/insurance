@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../../App'
+import { API } from '../../../api/API'
 import styles from '../../Page.module.scss'
 
 export default function ProfileTab() {
@@ -21,7 +22,7 @@ export default function ProfileTab() {
         setBirthDate(user?.birth_date || '')
     }, [user])
 
-    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
         try {
@@ -47,7 +48,10 @@ export default function ProfileTab() {
             if (data['bad habits'] && data['bad habits'] !== '') u.badHabits = data['bad habits']?.toString()
             if (data['surgical operations'] && data['surgical operations'] !== '') u.surgical_operations = data['surgical operations']?.toString()
 
-            setUser(u)
+            const newUser = await API.updateUser(u)
+
+            if (newUser) setUser(newUser)
+
             setSuccess(true)
             e.currentTarget.reset()
         }

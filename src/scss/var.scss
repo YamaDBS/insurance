@@ -1,6 +1,20 @@
 :root {
-    --background-color: #151c2c;
-    --color-g-1: #1d263b;
+    --background-main: #111111;
+    --background-secondary: #1f1f1f;
+    --background-light: #2c2c2c;
+
+    --background-error: #ff0000;
+    --background-error-hover: #cc0000;
+
+    --background-success: #06b900;
+    --background-success-hover: #00af00;
+
+    --btn-hover: #1c89e2;
+
+    --border-color: #3a3a3a;
+    --border-active: #265ddd;
+
+    --color-g-1: #3a3a3a;
     --color-g-2: #545d6e;
 
     --color: white;

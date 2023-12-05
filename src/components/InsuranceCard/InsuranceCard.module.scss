@@ -1,6 +1,6 @@
 .card {
     position: relative;
-    border: 3px solid #e0e0e0;
+    border: 3px solid var(--border-color);
     border-radius: 10px;
 
     padding: 20px;
@@ -17,7 +17,7 @@
 
     &:hover {
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        border-color: #4a72cf;
+        border-color: var(--border-active);
     }
 }
 
@@ -113,7 +113,7 @@
 }
 
 .date {
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     padding: 5px 10px;
     border-radius: 30px;
     text-wrap: nowrap;

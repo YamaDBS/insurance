@@ -7,13 +7,12 @@
     border-radius: 20px;
     max-width: min(80vw, 1200px);
     margin: 0 auto;
-    background-color: var(--color-g-2);
+    background-color: var(--background-light);
 
     min-height: min(80dvh, 700px);
     height: fit-content;
 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    margin-top: 30px;
 
     .insurance_tab {
         user-select: none;
@@ -34,7 +33,7 @@
 
         &.active {
             color: white;
-            background-color: var(--color-g-1);
+            background-color: var(--background-secondary);
             filter: none;
         }
 
@@ -56,7 +55,7 @@
 }
 
 .insurance_content {
-    background-color: var(--color-g-1);
+    background-color: var(--background-secondary);
     padding: 30px;
     height: fit-content;
     min-height: 70dvh;
@@ -90,7 +89,7 @@
     color: white;
 
     .title {
-        background-color: var(--color-g-2);
+        background-color: var(--background-secondary);
 
         padding: 10px 20px;
         border-radius: 20px;
@@ -113,7 +112,7 @@
         padding: 20px;
         gap: 20px;
 
-        background-color: var(--color-g-2);
+        background-color: var(--background-secondary);
         box-shadow: 3px 3px 15px rgba(0, 0, 0, 1);
 
         border-radius: 15px;
@@ -193,11 +192,6 @@
     margin-bottom: 30px;
 }
 
-select,
-option {
-    text-transform: capitalize;
-}
-
 label {
     position: relative;
     display: flex;
@@ -220,14 +214,13 @@ label {
         font-weight: normal;
         border-radius: 5px;
 
-        border: 2px solid var(--color-g-2);
+        border: 2px solid var(--border-color);
         color: white;
-        text-transform: capitalize;
 
-        background-color: var(--background-color);
+        background-color: var(--background-main);
 
         &:focus {
-            border-color: #4a72cf;
+            border-color: var(--border-active);
         }
     }
 
@@ -271,9 +264,9 @@ label {
     padding: 15px 30px;
     margin-top: auto;
     border-radius: 10px;
-    color: var(--color);
+    color: black;
 
-    background-color: var(--color-g-2);
+    background-color: white;
 
     font-size: 1.2rem;
     font-weight: 900;
@@ -283,7 +276,8 @@ label {
     transition: all 0.2s ease-in-out;
 
     &:hover {
-        background-color: #4a72cf
+        color: white;
+        background-color: var(--btn-hover);
     }
 }
 
@@ -294,7 +288,7 @@ label {
     margin-left: auto;
 
     &:hover {
-        background-color: #09c447
+        background-color: var(--background-success)
     }
 }
 
