@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'corsheaders',
     "rest_framework",
     "rest_framework.authtoken",
     "insurance",
@@ -51,7 +52,17 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+    ]
+
+CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:3000',
+    ]
 
 ROOT_URLCONF = "insurance_company.urls"
 
