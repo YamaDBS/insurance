@@ -18,6 +18,14 @@ class InsuranceStatus(models.Model):
         return self.name
 
 
+class Agent(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
+    class Meta:
+        verbose_name = "agent"
+        verbose_name_plural = "agents"
+
+
 class Insurance(models.Model):
     number = models.CharField(max_length=9, unique=True)
 
@@ -46,14 +54,6 @@ class Insurance(models.Model):
     @property
     def days_left(self) -> int:
         return (self.end_date - self.start_date).days
-
-
-class Agent(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-
-    class Meta:
-        verbose_name = "agent"
-        verbose_name_plural = "agents"
 
 
 class Client(models.Model):
