@@ -25,6 +25,10 @@ class InsuranceViewSet(viewsets.ModelViewSet):
         if self.request.user:
             queryset = queryset.filter(client=self.request.user.id)
 
+        insurance_number = self.request.query_params.get("search")
+        if insurance_number:
+            queryset = queryset.filter(number=insurance_number)
+
         return queryset
 
     def get_serializer_class(self):
