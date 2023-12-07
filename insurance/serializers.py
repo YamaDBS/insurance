@@ -16,16 +16,8 @@ class InsuranceStatusRetrieveSerializer(serializers.ModelSerializer):
 
 
 class InsuranceListSerializer(serializers.ModelSerializer):
-    type = serializers.SlugRelatedField(
-        many=False,
-        read_only=True,
-        slug_field="name"
-    )
-    status = serializers.SlugRelatedField(
-        many=False,
-        read_only=True,
-        slug_field="name"
-    )
+    type = serializers.SlugRelatedField(many=False, read_only=True, slug_field="name")
+    status = serializers.SlugRelatedField(many=False, read_only=True, slug_field="name")
 
     class Meta:
         model = Insurance
