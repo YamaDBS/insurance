@@ -4,7 +4,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 
 from insurance.models import Insurance
-from insurance.serializers import InsuranceListSerializer, InsuranceDetailSerializer
+from insurance.serializers import (
+    InsuranceListSerializer,
+    InsuranceDetailSerializer
+)
 
 
 class InsurancePagination(PageNumberPagination):
@@ -15,7 +18,7 @@ class InsurancePagination(PageNumberPagination):
 
 class InsuranceViewSet(viewsets.ModelViewSet):
     queryset = Insurance.objects.select_related("type", "status")
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
     serializer_class = InsuranceListSerializer
     pagination_class = InsurancePagination
 
@@ -36,5 +39,3 @@ class InsuranceViewSet(viewsets.ModelViewSet):
             return InsuranceDetailSerializer
 
         return InsuranceListSerializer
-
-

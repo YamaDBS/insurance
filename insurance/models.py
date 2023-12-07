@@ -29,10 +29,9 @@ class InsuranceStatus(models.Model):
 
 
 class Agent(models.Model):
-    user = models.OneToOneField(User,
-                                related_name="agent",
-                                on_delete=models.CASCADE,
-                                primary_key=True)
+    user = models.OneToOneField(
+        User, related_name="agent", on_delete=models.CASCADE, primary_key=True
+    )
 
     class Meta:
         verbose_name = "agent"
@@ -43,10 +42,9 @@ class Agent(models.Model):
 
 
 class Client(models.Model):
-    user = models.OneToOneField(User,
-                                related_name="client",
-                                on_delete=models.CASCADE,
-                                primary_key=True)
+    user = models.OneToOneField(
+        User, related_name="client", on_delete=models.CASCADE, primary_key=True
+    )
 
     phone_number = models.CharField(max_length=31)
     passport_number = models.CharField(max_length=31)
@@ -71,10 +69,9 @@ class Client(models.Model):
         verbose_name = "client"
         verbose_name_plural = "clients"
 
-    agent = models.ForeignKey(Agent,
-                              null=True,
-                              related_name="client",
-                              on_delete=models.PROTECT)
+    agent = models.ForeignKey(
+        Agent, null=True, related_name="client", on_delete=models.PROTECT
+    )
 
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"
@@ -101,10 +98,9 @@ class Insurance(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    client = models.ForeignKey(Client,
-                               null=True,
-                               related_name="insurances",
-                               on_delete=models.CASCADE)
+    client = models.ForeignKey(
+        Client, null=True, related_name="insurances", on_delete=models.CASCADE
+    )
 
     @property
     def days_left(self) -> int:
@@ -112,4 +108,3 @@ class Insurance(models.Model):
 
     def __str__(self) -> str:
         return f"{self.number} ({self.name})"
-
