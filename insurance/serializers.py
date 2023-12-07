@@ -1,15 +1,16 @@
 from rest_framework import serializers
 
-from insurance.models import Insurance, InsuranceType, InsuranceStatus
+from insurance.models import Insurance, InsuranceType, InsuranceStatus, Client
+from user.serializers import UserSerializer
 
 
-class InsuranceTypeRetrieveSerializer(serializers.ModelSerializer):
+class InsuranceTypeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceType
         fields = "__all__"
 
 
-class InsuranceStatusRetrieveSerializer(serializers.ModelSerializer):
+class InsuranceStatusDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceStatus
         fields = "__all__"
@@ -25,12 +26,26 @@ class InsuranceListSerializer(serializers.ModelSerializer):
             "id",
             "number",
             "name",
-            "description",
             "type",
-            "price",
-            "coverage",
-            "start_date",
-            "end_date",
+            "days_left",
             "status",
         )
 
+
+class InsuranceDetailSerializer(serializers.ModelSerializer):
+    type = InsuranceTypeDetailSerializer(many=False, read_only=True)
+    status = InsuranceStatusDetailSerializer(many=False, read_only=False)
+
+    class Meta:
+        model = Insurance
+        fields = (
+            "id",
+            "number",
+            "name",
+            "description",
+            "type",
+            "start_date",
+            "end_date",
+            "days_left",
+            "status",
+        )
