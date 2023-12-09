@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
+from insurance.models import Client
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

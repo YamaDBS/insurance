@@ -49,3 +49,6 @@ class User(AbstractUser):
 
     is_agent = models.BooleanField(default=False)
     is_client = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name}"

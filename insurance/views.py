@@ -1,12 +1,15 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
-from insurance.models import Insurance
+from insurance.models import Insurance, Agent, Client
 from insurance.serializers import (
     InsuranceListSerializer,
-    InsuranceDetailSerializer
+    InsuranceDetailSerializer, AgentListSerializer
 )
 
 
@@ -39,3 +42,18 @@ class InsuranceViewSet(viewsets.ModelViewSet):
             return InsuranceDetailSerializer
 
         return InsuranceListSerializer
+
+
+class AgentPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
+class AgentViewSet(viewsets.ModelViewSet):
+    queryset = Agent.objects.select_related("user")
+    authentication_classes = (TokenAuthentication, )
+    pagination_class = AgentPagination
+
+    def get_serializer_class(self):
+        return AgentListSerializer
