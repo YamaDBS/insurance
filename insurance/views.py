@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
@@ -5,12 +6,15 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from insurance.models import Insurance, Agent, Client
 from insurance.serializers import (
     InsuranceListSerializer,
     InsuranceDetailSerializer, AgentListSerializer
 )
+
+import redis
 
 
 class InsurancePagination(PageNumberPagination):
@@ -57,3 +61,38 @@ class AgentViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         return AgentListSerializer
+
+
+def connect_to_redis():
+    return redis.StrictRedis.from_url(settings.CACHES["default"]["LOCATION"])
+
+
+class RedisUserView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        agent = self.request.query_params.get("agent")
+
+        if not agent:
+            return Response(
+                {"message": "Agent not specified!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        data_to_store = request.data.get("sales_coef", "")
+
+        connect_to_redis().set(f"{agent}:sales_coef", data_to_store)
+
+        return Response({"message": "Data stored in Redis"}, status=status.HTTP_201_CREATED)
+
+    def get(self, request, *args, **kwargs):
+        agent = self.request.query_params.get("agent")
+
+        if not agent:
+            return Response(
+                {"message": "Agent not specified!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        agent_sales_coef = connect_to_redis().get(f"{agent}:sales_coef")
+
+        return Response({"agent_sales_coef": float(agent_sales_coef)}, status=status.HTTP_200_OK)
