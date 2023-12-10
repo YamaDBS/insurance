@@ -12,8 +12,6 @@ from insurance.serializers import InsuranceListSerializer
 
 
 INSURANCE_URL = reverse("insurance:insurance-list")
-AGENTS_URL = reverse("insurance:agent-list")
-REDIS_URL = reverse("insurance:agent-statistics")
 
 
 class UnauthorizedInsuranceTests(TestCase):
