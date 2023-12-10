@@ -44,6 +44,8 @@ class InsuranceDetailSerializer(serializers.ModelSerializer):
             "number",
             "name",
             "description",
+            "price",
+            "coverage",
             "type",
             "start_date",
             "end_date",
