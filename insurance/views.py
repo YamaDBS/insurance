@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from insurance.models import Insurance, Agent, Client
 from insurance.serializers import (
     InsuranceListSerializer,
-    InsuranceDetailSerializer, AgentListSerializer
+    InsuranceDetailSerializer, AgentListSerializer, ClientRetrieveSerializer
 )
 
 import redis
@@ -100,3 +100,12 @@ class RedisAgentStatisticsView(APIView):
         agent_sales_coef = connect_to_redis().get(f"{agent}:sales_coef")
 
         return Response({"agent_sales_coef": float(agent_sales_coef)}, status=status.HTTP_200_OK)
+
+
+class ClientRetrieveView(generics.RetrieveAPIView):
+    serializer_class = ClientRetrieveSerializer
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user.client

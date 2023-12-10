@@ -92,3 +92,12 @@ class AgentListSerializer(serializers.ModelSerializer):
             "user",
             "clients",
         )
+
+
+class ClientRetrieveSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    agent = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Client
+        fields = "__all__"

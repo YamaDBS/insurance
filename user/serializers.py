@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
 from insurance.models import Client
+from user.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
