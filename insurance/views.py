@@ -66,6 +66,9 @@ class AgentViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return AgentListSerializer
 
+    def get_object(self):
+        return Agent.objects.get(user_id=self.kwargs["pk"])
+
 
 def connect_to_redis():
     return redis.StrictRedis.from_url(settings.CACHES["default"]["LOCATION"])
