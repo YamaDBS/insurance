@@ -16,6 +16,8 @@ from insurance.serializers import (
 
 import redis
 
+from user.models import User
+
 
 class InsurancePagination(PageNumberPagination):
     page_size = 100
@@ -102,10 +104,19 @@ class RedisAgentStatisticsView(APIView):
         return Response({"agent_sales_coef": float(agent_sales_coef)}, status=status.HTTP_200_OK)
 
 
-class ClientRetrieveView(generics.RetrieveAPIView):
+class CurrentClientRetrieveView(generics.RetrieveAPIView):
     serializer_class = ClientRetrieveSerializer
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return self.request.user.client
+
+
+class ClientRetrieveView(generics.RetrieveAPIView):
+    serializer_class = ClientRetrieveSerializer
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAdminUser, )
+
+    def get_object(self):
+        return Client.objects.get(user_id=self.kwargs["pk"])
