@@ -27,7 +27,12 @@ class InsuranceListSerializer(serializers.ModelSerializer):
             "id",
             "number",
             "name",
+            "description",
+            "price",
+            "coverage",
             "type",
+            "start_date",
+            "end_date",
             "days_left",
             "status",
         )
@@ -76,8 +81,14 @@ class ClientSerializer(serializers.ModelSerializer):
             "sex",
             "birth_date",
             "phone_number",
+            "passport_number",
+            "weight",
+            "illness",
+            "bad_habits",
+            "surgeries",
             "address",
             "profession",
+            "income",
             "agent"
         )
 
