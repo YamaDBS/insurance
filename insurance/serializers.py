@@ -17,33 +17,6 @@ class InsuranceStatusDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class InsuranceListSerializer(serializers.ModelSerializer):
-    type = serializers.SlugRelatedField(queryset=InsuranceType.objects.all(),
-                                        many=False,
-                                        read_only=False,
-                                        slug_field="name")
-    status = serializers.SlugRelatedField(queryset=InsuranceStatus.objects.all(),
-                                          many=False,
-                                          read_only=False,
-                                          slug_field="name")
-
-    class Meta:
-        model = Insurance
-        fields = (
-            "id",
-            "number",
-            "name",
-            "description",
-            "price",
-            "coverage",
-            "type",
-            "start_date",
-            "end_date",
-            "days_left",
-            "status",
-        )
-
-
 class InsuranceDetailSerializer(serializers.ModelSerializer):
     type = InsuranceTypeDetailSerializer(many=False, read_only=True)
     status = InsuranceStatusDetailSerializer(many=False, read_only=True)
@@ -96,6 +69,33 @@ class ClientSerializer(serializers.ModelSerializer):
             "profession",
             "income",
             "agent"
+        )
+
+
+class InsuranceListSerializer(serializers.ModelSerializer):
+    type = serializers.SlugRelatedField(queryset=InsuranceType.objects.all(),
+                                        many=False,
+                                        read_only=False,
+                                        slug_field="name")
+    status = serializers.SlugRelatedField(queryset=InsuranceStatus.objects.all(),
+                                          many=False,
+                                          read_only=False,
+                                          slug_field="name")
+
+    class Meta:
+        model = Insurance
+        fields = (
+            "id",
+            "number",
+            "name",
+            "description",
+            "price",
+            "coverage",
+            "type",
+            "start_date",
+            "end_date",
+            "days_left",
+            "status",
         )
 
 

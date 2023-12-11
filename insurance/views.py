@@ -55,6 +55,9 @@ class InsuranceViewSet(mixins.ListModelMixin,
 
         return InsuranceListSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(client=self.request.user.client)
+
 
 class AgentPagination(PageNumberPagination):
     page_size = 100
@@ -112,9 +115,7 @@ class RedisAgentStatisticsView(APIView):
         return Response({"agent_sales_coef": float(agent_sales_coef)}, status=status.HTTP_200_OK)
 
 
-class CurrentClientRetrieveView(mixins.RetrieveModelMixin,
-                                mixins.UpdateModelMixin,
-                                viewsets.GenericViewSet):
+class CurrentClientRetrieveView(generics.RetrieveAPIView):
     serializer_class = ClientRetrieveSerializer
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,)
