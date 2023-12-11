@@ -112,7 +112,9 @@ class RedisAgentStatisticsView(APIView):
         return Response({"agent_sales_coef": float(agent_sales_coef)}, status=status.HTTP_200_OK)
 
 
-class CurrentClientRetrieveView(generics.RetrieveAPIView):
+class CurrentClientRetrieveView(mixins.RetrieveModelMixin,
+                                mixins.UpdateModelMixin,
+                                viewsets.GenericViewSet):
     serializer_class = ClientRetrieveSerializer
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,)
