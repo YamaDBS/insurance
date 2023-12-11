@@ -36,7 +36,10 @@ class InsuranceViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
 
         if self.request.user:
-            queryset = queryset.filter(client=self.request.user.id)
+            if self.request.user.is_agent:
+                queryset = queryset.filter(client__agent__user=self.request.user)
+            if self.request.user.is_client:
+                queryset = queryset.filter(client=self.request.user.id)
 
         insurance_number = self.request.query_params.get("search")
         if insurance_number:
