@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status, generics, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -25,7 +25,9 @@ class InsurancePagination(PageNumberPagination):
     max_page_size = 100
 
 
-class InsuranceViewSet(viewsets.ModelViewSet):
+class InsuranceViewSet(mixins.ListModelMixin,
+                       mixins.CreateModelMixin,
+                       viewsets.GenericViewSet):
     queryset = Insurance.objects.select_related("type", "status")
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, )

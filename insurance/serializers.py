@@ -18,8 +18,14 @@ class InsuranceStatusDetailSerializer(serializers.ModelSerializer):
 
 
 class InsuranceListSerializer(serializers.ModelSerializer):
-    type = serializers.SlugRelatedField(many=False, read_only=True, slug_field="name")
-    status = serializers.SlugRelatedField(many=False, read_only=True, slug_field="name")
+    type = serializers.SlugRelatedField(queryset=InsuranceType.objects.all(),
+                                        many=False,
+                                        read_only=False,
+                                        slug_field="name")
+    status = serializers.SlugRelatedField(queryset=InsuranceStatus.objects.all(),
+                                          many=False,
+                                          read_only=False,
+                                          slug_field="name")
 
     class Meta:
         model = Insurance
@@ -40,7 +46,7 @@ class InsuranceListSerializer(serializers.ModelSerializer):
 
 class InsuranceDetailSerializer(serializers.ModelSerializer):
     type = InsuranceTypeDetailSerializer(many=False, read_only=True)
-    status = InsuranceStatusDetailSerializer(many=False, read_only=False)
+    status = InsuranceStatusDetailSerializer(many=False, read_only=True)
 
     class Meta:
         model = Insurance
