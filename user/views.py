@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.settings import api_settings
 
+from insurance.permissions import IsAgentUser
 from user.models import User
 from user.serializers import UserSerializer, AuthTokenSerializer
 
@@ -38,7 +39,7 @@ class UserListView(generics.ListAPIView):
 
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAgentUser, IsAdminUser)
     pagination_class = UserPagination
 
     def get_queryset(self):

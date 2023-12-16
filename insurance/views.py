@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from insurance.models import Insurance, Agent, Client
+from insurance.permissions import IsAgentUser
 from insurance.serializers import (
     InsuranceListSerializer,
     InsuranceDetailSerializer, AgentListSerializer, ClientRetrieveSerializer
@@ -45,7 +46,7 @@ class InsuranceViewSet(mixins.ListModelMixin,
 
         insurance_number = self.request.query_params.get("search")
         if insurance_number:
-            queryset = queryset.filter(number=insurance_number)
+            queryset = queryset.filter(number__icontains=insurance_number)
 
         return queryset
 
@@ -115,7 +116,7 @@ class RedisAgentStatisticsView(APIView):
         return Response({"agent_sales_coef": float(agent_sales_coef)}, status=status.HTTP_200_OK)
 
 
-class CurrentClientRetrieveView(generics.RetrieveAPIView):
+class CurrentClientRetrieveView(generics.RetrieveUpdateAPIView):
     serializer_class = ClientRetrieveSerializer
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,)
@@ -124,10 +125,10 @@ class CurrentClientRetrieveView(generics.RetrieveAPIView):
         return self.request.user.client
 
 
-class ClientRetrieveView(generics.RetrieveAPIView):
+class ClientRetrieveView(generics.RetrieveUpdateAPIView):
     serializer_class = ClientRetrieveSerializer
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAdminUser, )
+    permission_classes = (IsAgentUser, IsAdminUser)
 
     def get_object(self):
         return Client.objects.get(user_id=self.kwargs["pk"])
