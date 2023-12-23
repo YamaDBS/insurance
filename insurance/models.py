@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from user.models import User
+from django.conf import settings
 
 
 class InsuranceType(models.Model):
@@ -30,7 +30,10 @@ class InsuranceStatus(models.Model):
 
 class Agent(models.Model):
     user = models.OneToOneField(
-        User, related_name="agent", on_delete=models.CASCADE, primary_key=True
+        settings.AUTH_USER_MODEL,
+        related_name="agent",
+        on_delete=models.CASCADE,
+        primary_key=True
     )
 
     class Meta:
@@ -43,34 +46,37 @@ class Agent(models.Model):
 
 class Client(models.Model):
     user = models.OneToOneField(
-        User, related_name="client", on_delete=models.CASCADE, primary_key=True
+        settings.AUTH_USER_MODEL, related_name="client", on_delete=models.CASCADE, primary_key=True
     )
 
-    phone_number = models.CharField(max_length=31)
-    passport_number = models.CharField(max_length=31)
-    address = models.CharField(max_length=255)
-    birth_date = models.DateField()
+    phone_number = models.CharField(max_length=31, null=True, blank=True)
+    passport_number = models.CharField(max_length=31, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
 
-    profession = models.CharField(max_length=63)
-    income = models.IntegerField()
+    profession = models.CharField(max_length=63, null=True, blank=True)
+    income = models.IntegerField(null=True, blank=True)
 
     class Sex(models.TextChoices):
         MALE = "Male"
         FEMALE = "Female"
 
-    sex = models.CharField(max_length=15, choices=Sex.choices)
+    sex = models.CharField(max_length=15, choices=Sex.choices, null=True, blank=True)
 
-    weight = models.FloatField()
-    illness = models.CharField(max_length=255)
-    bad_habits = models.CharField(max_length=255)
-    surgeries = models.CharField(max_length=255)
+    weight = models.FloatField(null=True, blank=True)
+    illness = models.CharField(max_length=255, null=True, blank=True)
+    bad_habits = models.CharField(max_length=255, null=True, blank=True)
+    surgeries = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = "client"
         verbose_name_plural = "clients"
 
     agent = models.ForeignKey(
-        Agent, null=True, related_name="client", on_delete=models.PROTECT
+        Agent,
+        null=True,
+        related_name="client",
+        on_delete=models.PROTECT
     )
 
     def __str__(self) -> str:

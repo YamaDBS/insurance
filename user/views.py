@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.settings import api_settings
 
+from insurance.models import Client, Agent
 from insurance.permissions import IsAgentUserOrIsAdminUser
 from user.models import User
 from user.serializers import UserSerializer, AuthTokenSerializer
@@ -12,6 +13,15 @@ from user.serializers import UserSerializer, AuthTokenSerializer
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+
+        if user.is_client:
+            Client.objects.create(user=user)
+
+        if user.is_agent:
+            Agent.objects.create(user=user)
 
 
 class CreateTokenView(ObtainAuthToken):

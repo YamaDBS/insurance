@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from insurance.models import Insurance, Agent, Client
-from insurance.permissions import IsAgentUser
+from insurance.permissions import IsAgentUserOrIsAdminUser
 from insurance.serializers import (
     InsuranceListSerializer,
     InsuranceDetailSerializer, AgentListSerializer, ClientRetrieveSerializer
@@ -128,7 +128,7 @@ class CurrentClientRetrieveView(generics.RetrieveUpdateAPIView):
 class ClientRetrieveView(generics.RetrieveUpdateAPIView):
     serializer_class = ClientRetrieveSerializer
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAgentUser, IsAdminUser)
+    permission_classes = (IsAgentUserOrIsAdminUser, )
 
     def get_object(self):
         return Client.objects.get(user_id=self.kwargs["pk"])
