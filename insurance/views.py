@@ -17,8 +17,6 @@ from insurance.serializers import (
 
 import redis
 
-from user.models import User
-
 
 class InsurancePagination(PageNumberPagination):
     page_size = 100

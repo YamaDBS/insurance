@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.pagination import PageNumberPagination
@@ -16,6 +16,7 @@ class CreateUserView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
+        user.first_name = user.email.split("@")[0]
 
         if user.is_client:
             Client.objects.create(user=user)
@@ -44,7 +45,7 @@ class UserPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class UserListView(generics.ListAPIView):
+class UserListView(viewsets.ModelViewSet):
     queryset = User.objects.all()
 
     serializer_class = UserSerializer

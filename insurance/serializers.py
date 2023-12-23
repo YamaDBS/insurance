@@ -113,7 +113,9 @@ class AgentListSerializer(serializers.ModelSerializer):
 
 class ClientRetrieveSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
-    agent = serializers.StringRelatedField(read_only=True)
+    agent = serializers.StringRelatedField(read_only=False)
+
+    insurances = InsuranceListSerializer(many=True, read_only=False)
 
     class Meta:
         model = Client
