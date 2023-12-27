@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../App'
 import Header from '../../components/Header/Header'
+import LoginPage from '../LoginPage/LoginPage'
 import styles from '../Page.module.scss'
+import ClientsTab from './tabs/ClientsTab'
 import InsurancesTab from './tabs/InsurancesTab'
 import ProfileTab from './tabs/ProfileTab'
-import UsersTab from './tabs/UsersTab'
 
 const tabs = {
     user: {
@@ -23,15 +24,11 @@ const tabs = {
     agent: {
         tabs: [
             {
-                name: 'profile',
-                icon: 'user.png'
-            },
-            {
                 name: 'insurances',
                 icon: 'file.png'
             },
             {
-                name: 'users',
+                name: 'clients',
                 icon: 'people.png'
             }
         ],
@@ -39,10 +36,6 @@ const tabs = {
     admin: {
         tabs: [
             {
-                name: 'profile',
-                icon: 'user.png'
-            },
-            {
                 name: 'insurances',
                 icon: 'file.png'
             },
@@ -51,16 +44,23 @@ const tabs = {
                 icon: 'people.png'
             },
             {
-                name: 'agents',
-                icon: 'work.svg'
+                name: 'add user',
+                icon: 'add_client.svg'
             }
         ],
-    },
+    }
 }
 
 export default function ProfilePage() {
     const [currentPage, setCurrentPage] = useState('profile')
-    const { user, setUser } = useContext(UserContext)
+    const { userResponse, setUserResponse } = useContext(UserContext)
+
+    const { user, error } = userResponse
+
+    useEffect(() => {
+        if (user?.status === 'admin') setCurrentPage('insurances')
+        if (user?.status === 'agent') setCurrentPage('clients')
+    }, [user])
 
     const navigate = useNavigate()
 
@@ -85,34 +85,20 @@ export default function ProfilePage() {
                             </ul>
                         </menu>
 
-                        <select style={{ marginTop: 'auto' }} name="user" id="user"
-                            onChange={e => {
-                                if (e.currentTarget.value === 'admin'
-                                    || e.currentTarget.value === 'agent'
-                                    || e.currentTarget.value === 'user'
-                                )
-                                    setUser({ ...user, status: e.currentTarget.value })
-                            }}
-                        >
-                            <option value="">Change user type</option>
-                            <option value="user">User</option>
-                            <option value="agent">Agent</option>
-                            <option value="admin">Admin</option>
-                        </select>
-
                         <button className={styles.logout} type='button' onClick={() => {
-                            setUser(null)
+                            setUserResponse({ user: null, error: null })
                             navigate('/')
                         }}>
-                            <img src="./img/ico/logout.png" alt="logout" />
+                            <img src="/img/ico/logout.png" alt="logout" />
                             <p>Logout</p>
                         </button>
                     </aside>
 
                     <main className={styles.main}>
-                        {currentPage === 'profile' && <ProfileTab />}
+                        {user.status === 'user' && currentPage === 'profile' && <ProfileTab userResponse={userResponse} setUserResponse={setUserResponse} />}
                         {currentPage === 'insurances' && <InsurancesTab />}
-                        {user.status === 'agent' && currentPage === 'users' && <UsersTab />}
+                        {(user.status === 'agent' || user.status === 'admin') && (currentPage === 'clients' || currentPage === 'users') && <ClientsTab />}
+                        {user.status === 'admin' && currentPage === 'add user' && <LoginPage />}
                     </main>
                 </div >
             }

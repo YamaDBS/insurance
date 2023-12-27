@@ -2,7 +2,7 @@ import styles from '../Insurance/Insurance.module.scss'
 
 type UserFinancialData = {
     profession: string,
-    month_income: string,
+    income: number,
 }
 
 type Props = UserFinancialData & {
@@ -10,7 +10,7 @@ type Props = UserFinancialData & {
     updateFields: (fields: Partial<UserFinancialData>) => void
 }
 
-export default function FinancialForm({ title, month_income, profession, updateFields }: Props) {
+export default function FinancialForm({ title, income, profession, updateFields }: Props) {
 
     return (
         <>
@@ -27,8 +27,8 @@ export default function FinancialForm({ title, month_income, profession, updateF
 
                 <label>
                     <div className={styles.unit}>$</div>
-                    <input value={month_income}
-                        onChange={e => updateFields({ month_income: e.target.value })}
+                    <input value={income}
+                        onChange={e => updateFields({ income: Number(e.target.value || 0) })}
                         required type="text" name="Month income" />
 
                     <h4>Month income</h4>

@@ -2,11 +2,17 @@ import styles from '../Insurance/Insurance.module.scss'
 
 type PetData = {
     name: string,
+    pet_name: string,
     type: string,
     birthDate: string,
     weight: string,
     breed: string,
-    gender: string,
+    sex: string,
+
+    start_date: string,
+    end_date: string,
+
+    coverage: number,
 }
 
 type Props = PetData & {
@@ -14,22 +20,21 @@ type Props = PetData & {
     updateFields: (fields: Partial<PetData>) => void
 }
 
-const pets = [
+export const pets = [
     "dog", "cat", "rabbit", "hamster", "turtle", "bird", "fish",
     "snake", "lizard", "horse", "chinchilla", "hedgehog", "rat", "mouse",
     "guinea pig", "tarantula", "frog"
 ]
 
-export default function PetForm({ title, birthDate, breed, gender, name, type, weight, updateFields }: Props) {
-
+export default function PetForm({ title, birthDate, breed, sex, name, type, start_date, end_date, pet_name, weight, updateFields }: Props) {
     return (
         <>
             {title !== undefined ? <h1 className={styles.title}>{title}</h1> : null}
 
             <label>
-                <input required type="text" name="name"
-                    value={name}
-                    onChange={e => updateFields({ name: e.target.value })}
+                <input required type="text" name="pet_name"
+                    value={pet_name}
+                    onChange={e => updateFields({ pet_name: e.target.value })}
                 />
 
                 <h4>Pet's name</h4>
@@ -43,6 +48,7 @@ export default function PetForm({ title, birthDate, breed, gender, name, type, w
 
                 <h4>What Pet Do You Own?</h4>
             </label>
+
 
             <div className={styles.row}>
 
@@ -68,7 +74,6 @@ export default function PetForm({ title, birthDate, breed, gender, name, type, w
                 </label>
             </div>
 
-
             <div className={styles.row}>
                 <label>
                     <input required name="breed" type='text'
@@ -80,15 +85,15 @@ export default function PetForm({ title, birthDate, breed, gender, name, type, w
                 </label>
 
                 <label>
-                    <select value={gender}
-                        onChange={e => updateFields({ gender: e.target.value })}
-                        required name="gender"  >
-                        <option value="" disabled selected>Gender</option>
-                        <option value="male">boy</option>
-                        <option value="female">Girl</option>
+                    <select value={sex}
+                        onChange={e => updateFields({ sex: e.target.value })}
+                        required name="sex"  >
+                        <option value="" disabled selected>Sex</option>
+                        <option value="Male">Boy</option>
+                        <option value="Female">Girl</option>
                     </select>
 
-                    <h4>Gender</h4>
+                    <h4>Sex</h4>
                 </label>
             </div>
 

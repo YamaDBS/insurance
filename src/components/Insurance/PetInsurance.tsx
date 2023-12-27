@@ -1,18 +1,31 @@
 import React, { FormEvent, useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UserContext, UserInsurancesContext } from '../../App'
+import { API, InsuranceAPI } from '../../api/API'
 import useMultistepForm from '../../hooks/useMultistepForm'
 import { InsuranceStatus, InsuranceType } from '../../types/insurance'
-import PetForm from '../Forms/PetForm'
+import InsuranceForm from '../Forms/InsuranceForm'
+import PetForm, { pets } from '../Forms/PetForm'
 import styles from './Insurance.module.scss'
 import InsuranceInfo from './InsuranceInfo'
 
 const INITIAL_DATA = {
     name: '',
+    pet_name: '',
     type: '',
     birthDate: '',
     weight: '',
     breed: '',
-    gender: '',
+    sex: '',
+    start_date: '',
+    end_date: '',
+    coverage: 0,
+}
+
+function calculatePrice(data: typeof INITIAL_DATA) {
+    const { coverage } = data
+
+    return Math.round(coverage * 0.1)
 }
 
 export default function PetInsurance() {
@@ -25,43 +38,70 @@ export default function PetInsurance() {
     }
 
     const { next, prev, reset, step, isFirstStep, isLastStep } = useMultistepForm([
-        <PetForm {...data} title='Pet information' updateFields={updateFields} />
+        <PetForm {...data} title='Pet information' updateFields={updateFields} />,
+        <InsuranceForm {...data} title='Insurance information' updateFields={updateFields} coverageOptions={() => [100, 1000, 2000, 5000, 10000, 20000, 50000]} />
     ])
 
-    const { user, setUser } = useContext(UserContext)
-    const { userInsurances, setUserInsurances } = useContext(UserInsurancesContext)
+    const { userResponse, setUserResponse } = useContext(UserContext)
 
-    function onSubmit(e: FormEvent<HTMLFormElement>) {
+    const { user, error } = userResponse
+
+    const navigate = useNavigate()
+
+    function isOrderingToggle() {
+        if (!user) {
+            navigate('/login')
+        } else if (user.status === 'admin' || user.status === 'agent') {
+            alert('You can not order insurance as admin or agent')
+            setIsOrdering(false)
+        } else {
+            setIsOrdering(true)
+        }
+    }
+
+    async function onSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
         if (isLastStep) {
-            console.log(data)
+            let numberError = "insurance with this number already exists."
 
-            if (user) {
-                setUserInsurances(prev => [...prev, {
-                    agent_id: null,
-                    coverage: 10000,
-                    creation_date: new Date().toISOString().split('T')[0],
-                    description: data.type + ' insurance',
-                    end_date: '',
-                    id: userInsurances.length + 1,
-                    price: 1000,
-                    start_date: new Date().toISOString().split('T')[0],
-                    status: InsuranceStatus.NEW,
-                    title: data.name + ' insurance',
-                    type: InsuranceType.Pet,
-                    user_id: user.id,
-                }])
+            do {
+                try {
+                    const result = await InsuranceAPI.createInsurance({
+                        name: data.name,
+                        description: `Pet: ${data.pet_name} (${data.type}, ${data.breed}, ${data.weight})`,
+                        number: "",
 
-                setIsOrdering(false)
-                reset()
-                setData(INITIAL_DATA)
-                e.currentTarget.reset()
+                        coverage: data.coverage,
+                        price: calculatePrice(data),
 
-                alert('Insurance added successfully')
-            }
+                        start_date: data.start_date,
+                        end_date: data.end_date,
 
-        } else next()
+                        status: InsuranceStatus.NEW,
+                        type: InsuranceType.Pet,
+                    })
+
+                    if (result.error) throw new Error(result.error)
+                    else {
+                        numberError = ''
+                        alert('Insurance added successfully')
+                    }
+
+                    setIsOrdering(false)
+                    reset()
+                    setData(INITIAL_DATA)
+
+                } catch (error: any) {
+                    if (error.message !== "insurance with this number already exists.") {
+                        alert(error.message)
+                        break
+                    }
+                }
+            } while (numberError === "insurance with this number already exists.")
+
+        }
+        else next()
     }
 
     return (
@@ -69,7 +109,7 @@ export default function PetInsurance() {
             <div className={styles.side_info}>
                 <h1 className={styles.title}>Pet Insurance</h1>
 
-                <img className={styles.img} src="./img/pets.webp" alt="pets" />
+                <img className={styles.img} src="/img/pets.webp" alt="pets" />
 
                 <div className={styles.info}>
 
@@ -86,11 +126,12 @@ export default function PetInsurance() {
 
             {!isOrdering ?
                 <InsuranceInfo items={[
-                    <p><span>COVID-19</span> - амбулаторна допомога <span>1 000 євро</span>, невідкладна та стаціонар - <span>30 000 євро</span></p>,
-                    <p>Невідкладна медична допомога до <span>30 000 євро</span></p>,
-                    <p>Невідкладна стоматологічна допомога</p>
+                    <p>Страхування для подорожей</p>,
+                    <p>Страхування життя і здоров'я улюбленця</p>,
+                    <p>Невідкладні операції до <span>10 000 євро</span></p>,
+                    <p>Невідкладна ветеринарна допомога</p>
                 ]}
-                    orderBtn={<button className={styles.form_btn} onClick={() => setIsOrdering(true)}>Order now</button>}
+                    orderBtn={<button className={styles.form_btn} onClick={isOrderingToggle}>Order now</button>}
                 />
                 :
 
@@ -98,13 +139,14 @@ export default function PetInsurance() {
                     {step}
 
                     <div className={styles.row}>
-                        {isOrdering && <button className={styles.form_btn} type='button' onClick={() => setIsOrdering(false)}>Back</button>}
+                        {isOrdering && isFirstStep && <button className={styles.form_btn} type='button' onClick={() => setIsOrdering(false)}>Back</button>}
                         {!isFirstStep && <button className={styles.form_btn} type='button' style={{ marginRight: 'auto' }} onClick={prev}>Back</button>}
                         {!isLastStep && <button className={styles.form_btn} style={{ marginLeft: 'auto' }} type='submit'>Next</button>}
+                        {isLastStep && <div className={styles.price} style={{}}> Price: <span>${calculatePrice(data) || 0}</span></div>}
                         {isLastStep && <button className={[styles.form_btn, styles.submit_bth].join(' ')} type='submit'>Submit</button>}
                     </div>
                 </form >
             }
-        </div>
+        </div >
     )
 }

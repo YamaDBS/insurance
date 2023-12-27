@@ -6,8 +6,6 @@ interface Props {
     orderBtn?: ReactElement,
 }
 
-
-
 export default function InsuranceInfo({ items, orderBtn }: Props) {
     return (
         <div className={styles.form}

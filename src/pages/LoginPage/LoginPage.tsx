@@ -1,60 +1,86 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../App';
-import { API } from '../../api/API';
+import { UserAPI } from '../../api/API';
 import Header from '../../components/Header/Header';
 import styles from './LoginPage.module.scss';
 
 export default function LoginPage() {
 
-    const { user, setUser } = useContext(UserContext);
+    const { userResponse, setUserResponse } = useContext(UserContext);
 
-    const usernameRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null);
-    const emailRef = useRef<HTMLInputElement>(null);
-
+    const [success, setSuccess] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
 
     const [type, setType] = React.useState<'login' | 'register'>('login');
 
     const navigate = useNavigate()
+    const [parent] = useAutoAnimate()
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const username = usernameRef.current?.value;
-        const password = passwordRef.current?.value;
-        const email = emailRef.current?.value;
+        const data = new FormData(e.currentTarget);
 
-        if (type === 'register') {
-            if (!username || !password || !email) return alert('Fill all fields');
+        const password = data.get('password')?.toString();
+        const email = data.get('email')?.toString();
+
+        const userType = data.get('type select')?.toString() as 'is_client' | 'is_agent';
+
+        if (userResponse.user?.status === 'admin') {
+            if (!password || !email || !userType) return alert('Fill all fields');
 
             try {
-                const resp = await API.register(email, password, username);
+                const resp = await UserAPI.register(email, password, userType);
+
+                if (resp) setSuccess(true)
+            }
+            catch (err: any) { setError(err.message) }
+        }
+
+        else if (type === 'register') {
+            if (!password || !email) return alert('Fill all fields');
+
+            try {
+                const resp = await UserAPI.register(email, password, 'is_client');
 
                 if (resp) setType('login')
             }
             catch (err: any) { setError(err.message) }
         }
         else if (type === 'login') {
-            if (!username || !password) return alert('Fill all fields');
+            if (!email || !password) return alert('Fill all fields');
 
             try {
-                const resp = await API.login(username, password);
+                const resp = await UserAPI.login(email, password);
 
-                if (resp) setUser(resp)
+                if (resp) setUserResponse(resp)
+
+                if (resp.user?.status === 'admin') navigate('/')
             }
             catch (err: any) { setError(err.message) }
         }
     }
 
     useEffect(() => {
-        setTimeout(() => { setError(null) }, 1300);
-    }, [error])
+        if (error) {
+            setSuccess(false)
+
+            setTimeout(() => { setError(null) }, 2000);
+        }
+
+        if (success) {
+            setError(null)
+
+            setTimeout(() => { setSuccess(false) }, 1000);
+        }
+    }, [error, success])
 
     useEffect(() => {
-        if (user) navigate('/')
-    }, [user])
+        if (userResponse.user?.status === 'admin') setType('register')
+        else if (userResponse.user) navigate('/')
+    }, [userResponse])
 
     return (
         <>
@@ -67,13 +93,13 @@ export default function LoginPage() {
                         <h1>Login</h1>
 
                         <label >
-                            <input ref={usernameRef} type="text" required placeholder="username" />
-                            <h4>Username</h4>
+                            <input type="text" required placeholder="email" name='email' />
+                            <h4>Email</h4>
 
                         </label>
 
                         <label>
-                            <input ref={passwordRef} type="password" required placeholder="password" />
+                            <input type="password" required placeholder="password" name='password' />
                             <h4>Password</h4>
                         </label>
 
@@ -89,26 +115,36 @@ export default function LoginPage() {
                         <h1>Register</h1>
 
                         <label >
-                            <input ref={usernameRef} type="text" required placeholder="username" />
-                            <h4>Username</h4>
-
-                        </label>
-
-                        <label >
-                            <input ref={emailRef} type="email" required placeholder="email" />
+                            <input type="email" required placeholder="email" name='email' />
                             <h4>Email</h4>
 
                         </label>
 
                         <label>
-                            <input ref={passwordRef} type="password" required placeholder="password" />
+                            <input type="password" required placeholder="password" name='password' />
                             <h4>Password</h4>
                         </label>
 
-                        <div className={styles.footer}>
-                            <button className={[styles.button, error && styles.error].join(' ')} type="submit">Register</button>
-                            <span onClick={() => setType('login')}>Already has an account? Login</span>
+                        {userResponse.user?.status === 'admin' &&
+                            <div className={styles.row}>
+                                <label className={styles.radio}>
+                                    <input type="radio" name="type select" value="is_client" defaultChecked required />
+                                    <p>Client</p>
+                                </label>
+
+                                <label className={styles.radio}>
+                                    <input type="radio" name="type select" value="is_agent" required />
+                                    <p>Agent</p>
+                                </label>
+                            </div>
+                        }
+
+                        <div className={styles.footer} ref={parent}>
+                            <button className={[styles.button, error !== null ? styles.error : null, success ? styles.success : null].join(' ')} type="submit">Register</button>
+                            {error !== null && <h3 className={styles.error}><p>Error:</p> {error}</h3>}
+                            {userResponse.user?.status !== 'admin' && <span onClick={() => setType('login')}>Already has an account? Login</span>}
                         </div>
+
                     </form>
                 }
             </div>

@@ -9,7 +9,7 @@ export default function HomePage() {
 
     return (
         <div className={styles.page} style={{ paddingBottom: 0 }}>
-            <Header setInsuranceType={setInsuranceType} type={insuranceType} />
+            <Header />
 
             <main className={styles.main} style={{ margin: 0 }}>
                 <Insurance setInsuranceType={setInsuranceType} type={insuranceType} />

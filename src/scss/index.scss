@@ -29,3 +29,24 @@ input::-webkit-inner-spin-button {
     margin: 0;
     /* <-- Apparently some margin are still there even though it's hidden */
 }
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: transparent;
+    transition: all .3s;
+}
+
+body::-webkit-scrollbar-thumb {
+    transition: all .3s;
+    width: 1px;
+    border-radius: 8px;
+    background: #615d5d;
+    background-clip: content-box;
+}
+
+input[type="radio"] {
+    cursor: pointer;
+}

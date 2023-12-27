@@ -52,52 +52,56 @@ export default function TravelersSelect({ travelers, max, min, setTravelersAmoun
     const [isEditing, setIsEditing] = useState(false)
 
     return (
-        <div className={[styles.wrapper, isEditing ? styles.active : null].join(' ')}>
-            <h3 className={styles.title} onClick={(e) => { e.stopPropagation(); setIsEditing(prev => !prev) }}>Travelers: <span style={{ fontWeight: 900 }}>{getAllTravelers()}</span></h3>
-            {isEditing &&
-                <div className={styles.options}>
-                    <div className={styles.option}>
-                        <h4>Adults</h4>
-                        <div className={styles.select}>
-                            <button type='button' className={styles.btn}
-                                onClick={() => changeTravelersAmount('adults', 'sub')}>-</button>
+        <>
+            {isEditing && <div className={styles.popup_wrapper} onClick={() => setIsEditing(false)} />}
 
-                            <span>{travelers.adults}</span>
+            <div onClick={(e) => e.stopPropagation()} className={[styles.wrapper, isEditing ? styles.active : null].join(' ')}>
+                <h3 className={styles.title} onClick={() => { setIsEditing(prev => !prev) }}>Travelers: <span style={{ fontWeight: 900 }}>{getAllTravelers()}</span></h3>
+                {isEditing &&
+                    <div className={styles.options}>
+                        <div className={styles.option}>
+                            <h4>Adults</h4>
+                            <div className={styles.select}>
+                                <button type='button' className={styles.btn}
+                                    onClick={() => changeTravelersAmount('adults', 'sub')}>-</button>
 
-                            <button type='button' className={styles.btn}
-                                onClick={() => changeTravelersAmount('adults', 'add')}>+</button>
-                        </div>
-                    </div>
+                                <span>{travelers.adults}</span>
 
-                    <div className={styles.option}>
-                        <h4>Children</h4>
-                        <div className={styles.select}>
-                            <button type='button' className={styles.btn}
-                                onClick={() => changeTravelersAmount('children', 'sub')}>-</button>
-
-                            <span>{travelers.children}</span>
-
-                            <button type='button' className={styles.btn}
-                                onClick={() => changeTravelersAmount('children', 'add')}>+</button>
-                        </div>
-                    </div>
-
-                    <div className={styles.option}>
-                        <h4>Seniors</h4>
-                        <div className={styles.select}>
-                            <button type='button' className={styles.btn}
-                                onClick={() => changeTravelersAmount('seniors', 'sub')}>-</button>
-
-                            <span>{travelers.seniors}</span>
-
-                            <button type='button' className={styles.btn}
-                                onClick={() => changeTravelersAmount('seniors', 'add')}>+</button>
+                                <button type='button' className={styles.btn}
+                                    onClick={() => changeTravelersAmount('adults', 'add')}>+</button>
+                            </div>
                         </div>
 
-                    </div>
-                </div>
-            }
+                        <div className={styles.option}>
+                            <h4>Children</h4>
+                            <div className={styles.select}>
+                                <button type='button' className={styles.btn}
+                                    onClick={() => changeTravelersAmount('children', 'sub')}>-</button>
 
-        </div>
+                                <span>{travelers.children}</span>
+
+                                <button type='button' className={styles.btn}
+                                    onClick={() => changeTravelersAmount('children', 'add')}>+</button>
+                            </div>
+                        </div>
+
+                        <div className={styles.option}>
+                            <h4>Seniors</h4>
+                            <div className={styles.select}>
+                                <button type='button' className={styles.btn}
+                                    onClick={() => changeTravelersAmount('seniors', 'sub')}>-</button>
+
+                                <span>{travelers.seniors}</span>
+
+                                <button type='button' className={styles.btn}
+                                    onClick={() => changeTravelersAmount('seniors', 'add')}>+</button>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </>
     )
 }

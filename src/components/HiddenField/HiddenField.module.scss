@@ -1,0 +1,19 @@
+.field {
+    display: flex;
+    align-items: center;
+
+    line-height: normal;
+    width: fit-content;
+
+    border-radius: 5px;
+
+    transition: all 0.2s ease-in-out;
+
+    cursor: pointer;
+
+    padding: 5px 10px;
+
+    &:hover {
+        background-color: var(--background-main);
+    }
+}

@@ -2,8 +2,8 @@ import styles from '../Insurance/Insurance.module.scss'
 
 type UserHealthData = {
     illness: string,
-    badHabits: string,
-    surgical_operations: string,
+    bad_habits: string,
+    surgeries: string,
 }
 
 type Props = UserHealthData & {
@@ -11,7 +11,7 @@ type Props = UserHealthData & {
     updateFields: (fields: Partial<UserHealthData>) => void
 }
 
-export default function PersonalHealthForm({ title, badHabits, illness, surgical_operations, updateFields }: Props) {
+export default function PersonalHealthForm({ title, bad_habits, illness, surgeries, updateFields }: Props) {
 
     return (
         <>
@@ -26,16 +26,16 @@ export default function PersonalHealthForm({ title, badHabits, illness, surgical
             </label>
 
             <label>
-                <input value={badHabits}
-                    onChange={e => updateFields({ badHabits: e.target.value })}
+                <input value={bad_habits}
+                    onChange={e => updateFields({ bad_habits: e.target.value })}
                     type="text" name="Bad habits" />
 
                 <h4>Bad habits</h4>
             </label>
 
             <label>
-                <input value={surgical_operations}
-                    onChange={e => updateFields({ surgical_operations: e.target.value })}
+                <input value={surgeries}
+                    onChange={e => updateFields({ surgeries: e.target.value })}
                     type="text" name="Surgical operations" />
 
                 <h4>Surgical operations</h4>

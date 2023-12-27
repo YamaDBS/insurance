@@ -21,20 +21,20 @@ export default function Insurance({ setInsuranceType, type }: Props) {
             <div className={styles.wrapper} >
                 <div className={[styles.insurance_tab, type === InsuranceType.Travel ? styles.active : null].join(' ')}
                     onClick={() => setInsuranceType(InsuranceType.Travel)}>
-                    <img src="./img/ico/travel.png" alt="travel" />
+                    <img src="/img/ico/travel.png" alt="travel" />
                     <h3>Travel</h3>
                 </div>
 
                 <div className={[styles.insurance_tab, type === InsuranceType.Pet ? styles.active : null].join(' ')}
                     onClick={() => setInsuranceType(InsuranceType.Pet)}>
-                    <img src="./img/ico/pet.png" alt="pet" />
+                    <img src="/img/ico/pet.png" alt="pet" />
 
                     <h3>Pet</h3>
                 </div>
 
                 <div className={[styles.insurance_tab, type === InsuranceType.Life ? styles.active : null].join(' ')}
                     onClick={() => setInsuranceType(InsuranceType.Life)}>
-                    <img src="./img/ico/heart.png" alt="life" />
+                    <img src="/img/ico/heart.png" alt="life" />
                     <h3>Life</h3>
                 </div>
             </div>

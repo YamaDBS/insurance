@@ -1,25 +1,44 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+import React, { createRef, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../../App'
-import { API } from '../../../api/API'
+import { UserAPI } from '../../../api/API'
+import { SEX, User, UserResponse } from '../../../types/user'
 import styles from '../../Page.module.scss'
 
-export default function ProfileTab() {
-    function getSelectedGender(gender: string) {
-        if (user?.gender === gender) return { selected: true }
+interface Props {
+    userResponse: UserResponse
+    setUserResponse?: React.Dispatch<React.SetStateAction<UserResponse>>
+}
+
+export default function ProfileTab({ userResponse, setUserResponse }: Props) {
+    const { userResponse: currentUser, setUserResponse: setCurrentUser } = useContext(UserContext)
+
+    const { user, error } = userResponse
+
+    const [parent] = useAutoAnimate()
+
+    function getSelectedGender(sex: string) {
+        if (user?.sex === sex) return { selected: true }
         return { selected: false }
     }
 
-    const { user, setUser } = useContext(UserContext)
-
     const [birthDate, setBirthDate] = useState(user?.birth_date || '')
 
-    const [success, setSuccess] = useState<boolean | null>(null)
-    const [error, setError] = useState<boolean | null>(null)
+    const [formSuccess, setFormSuccess] = useState<boolean | null>(null)
+    const [formError, setFormError] = useState<boolean | null>(null)
+
+    const formRef = createRef<HTMLFormElement>()
+
+    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false)
+
+    function isClientEditing() {
+        return user?.id === currentUser.user?.id
+    }
 
     useEffect(() => {
         if (!user) return
 
-        setBirthDate(user?.birth_date || '')
+        setBirthDate(user.birth_date || '')
     }, [user])
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -31,74 +50,111 @@ export default function ProfileTab() {
 
             if (!user) return
 
-            const u = { ...user }
+            const u: User = { ...user }
 
             if (data['first name'] && data['first name'] !== '') u.first_name = data['first name']?.toString()
             if (data['last name'] && data['last name'] !== '') u.last_name = data['last name']?.toString()
             if (data['birthDate'] && data['birthDate'] !== '') u.birth_date = data['birthDate']?.toString()
             if (data['weight'] && data['weight'] !== '') u.weight = Number(data['weight']?.toString())
-            if (data['gender'] && data['gender'] !== '') u.gender = data['gender']?.toString()
+            if (data['sex'] && data['sex'] !== '') u.sex = data['sex']?.toString() as SEX
             if (data['phone number'] && data['phone number'] !== '') u.phone_number = data['phone number']?.toString()
             if (data['email'] && data['email'] !== '') u.email = data['email']?.toString()
             if (data['address'] && data['address'] !== '') u.address = data['address']?.toString()
             if (data['passport number'] && data['passport number'] !== '') u.passport_number = data['passport number']?.toString()
             if (data['profession'] && data['profession'] !== '') u.profession = data['profession']?.toString()
-            if (data['month income'] && data['month income'] !== '') u.month_income = Number(data['month income']?.toString() || 0)
+            if (data['month income'] && data['month income'] !== '') u.income = Number(data['month income']?.toString() || 0)
             if (data['illness'] && data['illness'] !== '') u.illness = data['illness']?.toString()
-            if (data['bad habits'] && data['bad habits'] !== '') u.badHabits = data['bad habits']?.toString()
-            if (data['surgical operations'] && data['surgical operations'] !== '') u.surgical_operations = data['surgical operations']?.toString()
+            if (data['bad habits'] && data['bad habits'] !== '') u.bad_habits = data['bad habits']?.toString()
+            if (data['surgical operations'] && data['surgical operations'] !== '') u.surgeries = data['surgical operations']?.toString()
 
-            const newUser = await API.updateUser(u)
+            let password: string | undefined = undefined
+            if (data['password'] && data['password'] !== '') password = data['password']?.toString()
 
-            if (newUser) setUser(newUser)
+            let resp: UserResponse = { error: null, user: null }
 
-            setSuccess(true)
-            e.currentTarget.reset()
+            if (isClientEditing()) {
+                resp = await UserAPI.updateClientSelf(u, password)
+            }
+            else resp = await UserAPI.updateClient(u)
+
+            if (resp.error) throw new Error(resp.error)
+            if (setUserResponse !== undefined) setUserResponse(resp)
+
+            setFormSuccess(true)
         }
-        catch (err) {
-            console.log(err)
-            setError(true)
+        catch (err: any) {
+            setFormError(true)
+        } finally {
+            formRef.current?.reset()
         }
     }
 
     useEffect(() => {
-        if (success) {
-            setError(null)
+        if (formSuccess) {
+            setFormError(null)
 
             setTimeout(() => {
-                setSuccess(null)
+                setFormSuccess(null)
             }, 2000)
         }
 
-        if (error) {
-            setSuccess(null)
+        if (formError) {
+            setFormSuccess(null)
 
             setTimeout(() => {
-                setError(null)
+                setFormError(null)
             }, 2000)
         }
-    }, [success, error])
+    }, [formSuccess, formError])
 
     return (
         <>
-            {!!user &&
+            {user &&
                 <div className={styles.profile}>
-                    <form className={styles.info} onSubmit={onSubmit}>
-                        <div className={styles.row2}>
+                    <form className={styles.info} onSubmit={onSubmit} ref={formRef}>
+                        <div className={isClientEditing() ? styles.row5 : styles.row4}>
                             <label>
-                                <input placeholder={user.first_name} type="text" name="first name" />
+                                {isClientEditing() ?
+                                    <input placeholder={user.first_name} type="text" name="first name" />
+                                    :
+                                    <p>{user.first_name}</p>
+                                }
 
                                 <h4>First name</h4>
                             </label>
 
                             <label>
-                                <input placeholder={user.last_name} type="text" name="last name" />
+                                {isClientEditing() ?
+                                    <input placeholder={user.last_name} type="text" name="last name" />
+                                    :
+                                    <p>{user.last_name}</p>
+                                }
 
                                 <h4>Last name</h4>
                             </label>
+
+                            <label>
+                                <input placeholder={user.phone_number} type="tel" name="phone number" />
+
+                                <h4>Phone number</h4>
+                            </label>
+
+                            {isClientEditing() &&
+                                <label>
+                                    <input placeholder={user.email} type="email" name="email" onChange={(e) => { e.currentTarget.value.length !== 0 ? setIsPasswordVisible(true) : setIsPasswordVisible(false) }} />
+
+                                    <h4>Email</h4>
+                                </label>
+                            }
+
+                            <label>
+                                <input placeholder={user.passport_number} type="password" name="passport number" />
+
+                                <h4>Passport number</h4>
+                            </label>
                         </div>
 
-                        <div className={styles.row3}>
+                        <div className={styles.row5}>
 
                             <label>
                                 <input value={birthDate}
@@ -113,10 +169,10 @@ export default function ProfileTab() {
 
                             <label>
                                 <select
-                                    name="gender">
+                                    name="sex">
                                     <option value="" disabled {...getSelectedGender('')} >Gender</option>
-                                    <option {...getSelectedGender('male')} value="male">male</option>
-                                    <option {...getSelectedGender('female')} value="female">female</option>
+                                    <option {...getSelectedGender('Male')} value="Male">male</option>
+                                    <option {...getSelectedGender('Female')} value="Female">female</option>
                                 </select>
 
                                 <h4>Gender</h4>
@@ -128,45 +184,6 @@ export default function ProfileTab() {
 
                                 <h4>Weight</h4>
                             </label>
-
-                        </div>
-
-
-                        <div className={styles.row3}>
-                            <label>
-                                <input
-                                    placeholder={user.phone_number} type="tel" name="phone number" />
-
-                                <h4>Phone number</h4>
-                            </label>
-
-                            <label>
-                                <input placeholder={user.email}
-                                    type="email" name="email" />
-
-                                <h4>Email</h4>
-                            </label>
-
-                            <label>
-                                <input placeholder={
-                                    user.passport_number ? 'Enter another passport number' : 'Enter your passport number'
-                                } type="password" name="passport number" />
-
-                                <h4>Passport number</h4>
-                            </label>
-
-                        </div>
-
-                        <div className={styles.row}>
-                            <label>
-                                <input placeholder={user.address} type="text" name="address" />
-
-                                <h4>Address</h4>
-                            </label>
-                        </div>
-
-
-                        <div className={styles.row2}>
                             <label>
                                 <input placeholder={user.profession} type="text" name="profession" />
 
@@ -175,9 +192,17 @@ export default function ProfileTab() {
 
                             <label>
                                 <div className={styles.unit}>$</div>
-                                <input placeholder={String(user.month_income || '')} type="number" name="month income" />
+                                <input placeholder={String(user.income || '')} type="number" name="month income" />
 
                                 <h4>Month income</h4>
+                            </label>
+                        </div>
+
+                        <div className={styles.row}>
+                            <label>
+                                <input placeholder={user.address} type="text" name="address" />
+
+                                <h4>Address</h4>
                             </label>
                         </div>
 
@@ -189,23 +214,34 @@ export default function ProfileTab() {
                             </label>
 
                             <label>
-                                <input placeholder={user.badHabits} type="text" name="bad habits" />
+                                <input placeholder={user.bad_habits} type="text" name="bad habits" />
 
                                 <h4>Bad habits</h4>
                             </label>
 
                             <label>
-                                <input placeholder={user.surgical_operations} type="text" name="surgical operations" />
+                                <input placeholder={user.surgeries} type="text" name="surgical operations" />
 
                                 <h4>Surgical operations</h4>
                             </label>
                         </div>
 
-                        <button type='submit' className={[styles.update_btn, success && styles.success, error && styles.error].join(' ')}>Update</button>
+                        <div className={styles.submit} ref={parent}>
+                            {isPasswordVisible &&
+                                <label>
+                                    <input type="password" required placeholder='Your password' name='password' />
+
+                                    <h4>Password</h4>
+                                </label>
+                            }
+
+                            <button type='submit' className={[styles.update_btn, formSuccess && styles.success, formError && styles.error].join(' ')}>Update</button>
+                        </div>
                     </form>
 
                 </div>
             }
+
         </>
     )
 }

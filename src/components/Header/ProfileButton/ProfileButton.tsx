@@ -4,14 +4,15 @@ import { UserContext } from '../../../App'
 import styles from './ProfileButton.module.scss'
 
 export default function ProfileButton() {
-    const { user } = useContext(UserContext)
+    const { userResponse } = useContext(UserContext)
+    const { user } = userResponse
 
     return (
         <>
             {user ?
                 <Link to={'/profile'} className={styles.profile} >
-                    <img src="./img/ico/user.png" alt="user" />
-                    {user.username}
+                    <img src="/img/ico/user.png" alt="user" />
+                    {user.last_name}
                     <p>({user.status})</p>
                     {/* TODO: delete status */}
                 </Link >

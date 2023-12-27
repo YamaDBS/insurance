@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import styles from '../Insurance/Insurance.module.scss'
+import { calculateCoverage } from '../Insurance/TravelInsurance'
 import TravelersSelect from '../TravelersSelect/TravelersSelect'
 
-type TravelData = {
+export type TravelData = {
     start_date: string,
     end_date: string,
     country: string,
@@ -11,7 +12,9 @@ type TravelData = {
         children: number,
         seniors: number,
     },
+    coverage: number,
     travel_type: string,
+    name: string,
 }
 
 type Props = TravelData & {
@@ -19,7 +22,7 @@ type Props = TravelData & {
     updateFields: (fields: Partial<TravelData>) => void
 }
 
-export default function TravelForm({ title, country, end_date, travel_type, start_date, travelers, updateFields }: Props) {
+export default function TravelForm({ title, country, end_date, travel_type, start_date, travelers, name, updateFields }: Props) {
 
     function getMaxDate() {
         if (end_date !== '') return new Date(end_date).toISOString().split('T')[0]
@@ -47,6 +50,14 @@ export default function TravelForm({ title, country, end_date, travel_type, star
         <>
             {title !== undefined ? <h1 className={styles.title}>{title}</h1> : null}
 
+            <label>
+                <input value={name}
+                    onChange={e => updateFields({ name: e.target.value })}
+                    required type="text"
+                    name="name" />
+
+                <h4>Name your insurance</h4>
+            </label>
 
             <div className={styles.row}>
 
@@ -102,27 +113,45 @@ export default function TravelForm({ title, country, end_date, travel_type, star
 
             </div>
 
+            <div className={styles.row}>
 
-            <label>
-                <select value={country}
-                    onChange={e => updateFields({ country: e.target.value })}
-                    required name="country"  >
-                    <option value="" disabled selected>Select country</option>
-                    <option value="USA">USA</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="EU">Europe (Any EU country) </option>
-                    <option value="China">China</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Turkey">Turkey</option>
-                    <option value="Egypt">Egypt</option>
-                    <option value="Israel">Israel</option>
-                    <option value="South Africa">South Africa</option>
-                </select>
+                <label>
+                    <select value={country}
+                        onChange={e => updateFields({ country: e.target.value })}
+                        required name="country"  >
+                        <option value="" disabled selected>Select country</option>
+                        <option value="USA">USA</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Mexico">Mexico</option>
+                        <option value="EU">Europe (Any EU country) </option>
+                        <option value="China">China</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Turkey">Turkey</option>
+                        <option value="Egypt">Egypt</option>
+                        <option value="Israel">Israel</option>
+                        <option value="South Africa">South Africa</option>
+                    </select>
 
-                <h4>Country</h4>
-            </label>
+                    <h4>Country</h4>
+                </label>
+
+
+                <label>
+                    <select
+                        onChange={e => updateFields({ coverage: Number(e.target.value) })}
+                        required name="coverage"  >
+                        <option value="" disabled selected>Select coverage</option>
+
+                        {calculateCoverage({ travelers, country, travel_type })?.map((coverage, i) =>
+                            <option key={coverage + i} value={coverage}>${coverage}.00</option>)
+                        }
+
+                    </select>
+
+                    <h4>Coverage</h4>
+                </label>
+            </div>
         </>
     )
 }

@@ -4,8 +4,8 @@ type UserData = {
     firstName: string,
     lastName: string,
     birthDate: string,
-    weight: string,
-    gender: string,
+    weight: number,
+    sex: string,
 }
 
 type Props = UserData & {
@@ -13,7 +13,7 @@ type Props = UserData & {
     updateFields: (fields: Partial<UserData>) => void
 }
 
-export default function PersonalForm({ title, birthDate, firstName, gender, lastName, weight, updateFields }: Props) {
+export default function PersonalForm({ title, birthDate, firstName, sex, lastName, weight, updateFields }: Props) {
 
     return (
         <>
@@ -52,19 +52,19 @@ export default function PersonalForm({ title, birthDate, firstName, gender, last
                 <label>
                     <div className={styles.unit}>kg</div>
                     <input value={weight}
-                        onChange={e => updateFields({ weight: e.target.value })}
+                        onChange={e => updateFields({ weight: Number(e.target.value || 0) })}
                         required type="number" step="0.5" name="weight" />
 
                     <h4>Weight</h4>
                 </label>
 
                 <label>
-                    <select value={gender}
-                        onChange={e => updateFields({ gender: e.target.value })}
-                        required name="gender"  >
+                    <select value={sex}
+                        onChange={e => updateFields({ sex: e.target.value })}
+                        required name="sex"  >
                         <option value="" disabled selected>Gender</option>
-                        <option value="male">male</option>
-                        <option value="female">female</option>
+                        <option value="Male">male</option>
+                        <option value="Female">female</option>
                     </select>
 
                     <h4>Gender</h4>

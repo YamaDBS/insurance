@@ -1,35 +1,67 @@
 export enum InsuranceType {
-    Life = 'life',
-    Pet = 'pet',
-    Travel = 'travel'
+    Life = 'Life',
+    Pet = 'Pet',
+    Travel = 'Travel'
 }
 
 export enum InsuranceStatus {
-    NEW = 'new',
-    ACTIVE = 'active',
-    CANCELED = 'canceled',
-    EXPIRED = 'expired',
-    PAID = 'paid',
-    PENDING = 'pending'
+    NEW = 'New',
+    ACTIVE = 'Active',
+    CANCELED = 'Canceled',
+    EXPIRED = 'Expired',
+    PAID = 'Paid',
+    PENDING = 'Pending'
 }
 
-type Insurance = {
-    id: number
-    description: string
-    title: string
+export type InsurancesResponse = {
+    count: number
+    next: string | null
+    previous: string | null
+    results: Insurance[]
+    error: string | null
+}
 
-    price: number
-    coverage: number
-
-    type: InsuranceType
-    status: InsuranceStatus
-
+export type InsuranceAPIResponse = {
+    coverage: number,
+    days_left: number,
+    description: string,
     end_date: string
+    id: number
+    name: string
+    number: string
+    price: number
     start_date: string
-    creation_date: string
-
-    user_id: number
-    agent_id: number | null
+    status: InsuranceStatus
+    type: InsuranceType
 }
 
-export default Insurance
+export type InsuranceAPIRequest = {
+    coverage: number,
+    description: string,
+    end_date: string
+    name: string
+    number: string
+    price: number
+    start_date: string
+    status: InsuranceStatus
+    type: InsuranceType
+}
+
+export type Insurance = {
+    coverage: number,
+    days_left: number,
+    description: string,
+    end_date: string
+    id: number
+    name: string
+    number: string
+    price: number
+    start_date: string
+    status: InsuranceStatus
+    type: InsuranceType
+}
+
+export type InsuranceResponse = {
+    insurance: Insurance | null
+    error: string | null
+}
